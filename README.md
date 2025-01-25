@@ -1,36 +1,87 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Next.js Development Environment with DDEV and PM2
 
-## Getting Started
+This DDEV setup provides a streamlined development environment for building Next.js applications with Node.js and PM2. The setup includes a PHP-based web environment, a MariaDB database, and integrates PM2 to manage your Next.js development server.
 
-First, run the development server:
+## Project Setup: `next-ddev-setup`
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+### Key Features:
+- **PHP 8.2** web server (nginx-fpm)
+- **MariaDB 10.4** database
+- **Node.js 18** for Next.js app development
+- **PM2** to run and manage the Next.js development server
+- **Yarn** for package management
+- **Auto-generation of Next.js app** if no existing `package.json` is found
+- Automatically starts the Next.js development server on port 3000.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### How to Use:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. **Clone this repository** or create a new project folder.
+   
+2. **Install DDEV**:
+   - Follow the instructions for installing DDEV from [here](https://ddev.readthedocs.io/en/stable/#installation).
+   
+3. **Start DDEV**:
+   - Run `ddev start` in the terminal from your project folder.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+4. **Next.js App Initialization**:
+   - If no `package.json` file is found, the setup will automatically generate a Next.js app using the Next.js CLI.
 
-## Learn More
+5. **Access Your Development Server**:
+   - Once DDEV has finished setting up, access your Next.js app via `https://next-ddev-setup.ddev.site:3000`.
 
-To learn more about Next.js, take a look at the following resources:
+### PM2 Commands:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+PM2 helps manage the Next.js development server and can also be used to monitor the application or restart it if needed. Below are some useful PM2 commands:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **Start the app**:
+  - `pm2 start "yarn dev"`  
+    Starts the Next.js development server and binds it to port 3000.
 
-## Deploy on Vercel
+- **List all processes**:
+  - `pm2 list`  
+    Displays all the processes managed by PM2.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- **Monitor the app in real-time**:
+  - `pm2 monit`  
+    Opens a real-time monitor of all your applications, showing CPU and memory usage.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Restart the app**:
+  - `pm2 restart <app_name_or_id>`  
+    Restarts the Next.js development server (replace `<app_name_or_id>` with the actual name or ID of your app, for example, `pm2 restart 0`).
+
+- **Stop the app**:
+  - `pm2 stop <app_name_or_id>`  
+    Stops the running Next.js development server.
+
+- **Delete the app from PM2**:
+  - `pm2 delete <app_name_or_id>`  
+    Removes the app from PM2's process list.
+
+- **Save the current PM2 process list**:
+  - `pm2 save`  
+    Saves the current list of PM2 processes, which can be restored upon system reboot.
+
+- **Startup Script**:
+  - `pm2 startup`  
+    Generates a startup script to run PM2 and its processes automatically when the system reboots. This is useful for keeping the Next.js app running after a restart.
+
+- **View logs**:
+  - `pm2 logs`  
+    Displays the logs of all running PM2 processes. You can also specify a specific app to view logs for, like `pm2 logs <app_name_or_id>`.
+
+- **Check the status of the app**:
+  - `pm2 status <app_name_or_id>`  
+    Provides the status of a specific app (whether it’s online, stopped, etc.).
+
+- **Graceful restart**:
+  - `pm2 reload <app_name_or_id>`  
+    Restarts the application gracefully, which helps avoid downtime.
+
+- **Clear all logs**:
+  - `pm2 flush`  
+    Clears all logs from PM2.
+
+### Troubleshooting:
+
+- If you encounter issues with starting PM2, ensure you have `yarn` installed inside the DDEV container by running `ddev ssh` and executing `yarn --version`.
+- For any problems related to Next.js, check the generated logs or run `ddev logs` to debug.
